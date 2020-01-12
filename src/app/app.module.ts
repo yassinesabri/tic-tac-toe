@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { SquareComponent } from './square/square.component';
 import { BoardComponent } from './board/board.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {NbThemeModule, NbLayoutModule, NbButtonModule} from '@nebular/theme';
+import {NbThemeModule, NbLayoutModule, NbButtonModule, NbToastrModule, NbGlobalLogicalPosition} from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 
 @NgModule({
@@ -20,6 +20,9 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     AppRoutingModule,
     BrowserAnimationsModule,
     NbThemeModule.forRoot({ name: 'default' }),
+    NbToastrModule.forRoot({
+      position: NbGlobalLogicalPosition.TOP_START
+    }),
     NbLayoutModule,
     NbEvaIconsModule,
     NbButtonModule
