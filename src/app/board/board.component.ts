@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {NbToastrService} from '@nebular/theme';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-board',
@@ -8,10 +10,12 @@ import { Component, OnInit } from '@angular/core';
 export class BoardComponent implements OnInit {
 
   squares: any[];
+  xOrO = ['X', 'O'];
   isXNext: boolean;
   winner: string;
+  isGameOver;
 
-  constructor() { }
+  constructor(private toastrService: NbToastrService) { }
 
   ngOnInit() {
     this.newGame();
@@ -19,21 +23,32 @@ export class BoardComponent implements OnInit {
 
   newGame() {
     this.squares = Array(9).fill(null);
-    this.isXNext = true;
+    // randomize the first player
+    this.isXNext = _.sample(this.xOrO) === 'X';
     this.winner = null;
+    this.isGameOver = false;
   }
 
   get player() {
     return this.isXNext ? 'X' : 'O';
   }
 
-  makeMove(squareId : number) {
+  makeMove(squareId: number) {
     if (!this.squares[squareId]) {
       this.squares.splice(squareId, 1, this.player);
       this.isXNext = !this.isXNext;
     }
 
     this.winner = this.calculateWinner();
+
+    // show winner if the game is over
+    if (this.winner) {
+      this.isGameOver = true;
+      this.toastrService.primary('The winner is: ' + this.winner,
+        'Game Over', {
+        icon: 'bell-outline'
+      });
+    }
   }
 
   private calculateWinner() {
@@ -47,8 +62,8 @@ export class BoardComponent implements OnInit {
       [0, 4, 8],
       [2, 4, 6]
     ];
-    for (let i = 0; i < lines.length; i++) {
-      const [a, b, c] = lines[i];
+    for (const line of lines) {
+      const [a, b, c] = line;
       if (
         this.squares[a] &&
         this.squares[a] === this.squares[b] &&
